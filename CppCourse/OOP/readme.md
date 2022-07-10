@@ -1188,3 +1188,123 @@ int main()
     return 0;
 }
 ```
+
+### 4.2.4 构造函数的调用规则
+
+默认情况下, C++编译器至少给一个类添加三个函数
+1. 默认无参函数(无参, 函数体为空)
+2. 默认析构函数(无参, 函数体为空)
+3. 默认拷贝构造函数, 对属性进行拷贝
+
+构造函数调用规则如下:
+- 如果用户定义有参构造函数, C++不再提供默认无参构造, 但是会提供默认拷贝构造
+- 如果用户定义拷贝构造函数, C++不会提供其他构造函数
+
+[示例](./140205.cpp) 
+
+如果用户定义有参构造函数, C++不再提供默认无参构造, 但是会提供默认拷贝构造
+
+```c++
+#include <iostream>
+
+using namespace std;
+
+class Person
+{
+private:
+    /* data */
+public:
+    Person(/* args */);
+    Person(int age);
+    // Person(const Person &p);
+    ~Person();
+
+public:
+    int m_Age;
+};
+Person::Person(/* args */)
+{
+    cout << "Person 默认构造函数调用" << endl;
+}
+Person::Person(int age)
+{
+    cout << "Person 有参构造函数调用" << endl;
+    m_Age = age;
+}
+// Person::Person(const Person &p)
+// {
+//     cout << "Person 拷贝构造函数调用" << endl;
+//     m_Age = p.m_Age;
+// }
+
+Person::~Person()
+{
+    cout << "Person 默认析构函数调用" << endl;
+}
+
+void test01()
+{
+    Person p;
+    p.m_Age = 18;
+    Person p2(p);
+    cout << "p2 的年龄是" << p2.m_Age << endl;
+}
+int main()
+{
+    test01();
+    return 0;
+}
+```
+
+如果用户定义拷贝构造函数, C++不会提供其他构造函数
+
+```c++
+#include <iostream>
+
+using namespace std;
+
+class Person
+{
+private:
+    /* data */
+public:
+    Person(/* args */);
+    Person(int age);
+    // Person(const Person &p);
+    ~Person();
+
+public:
+    int m_Age;
+};
+// Person::Person(/* args */)
+// {
+//     cout << "Person 默认构造函数调用" << endl;
+// }
+// Person::Person(int age)
+// {
+//     cout << "Person 有参构造函数调用" << endl;
+//     m_Age = age;
+// }
+Person::Person(const Person &p)
+{
+    cout << "Person 拷贝构造函数调用" << endl;
+    m_Age = p.m_Age;
+}
+
+Person::~Person()
+{
+    cout << "Person 默认析构函数调用" << endl;
+}
+
+void test02(){
+    Person p(29);
+    Person p2(p);
+    cout << "p2 的年龄是" << p2.m_Age << endl;
+}
+int main()
+{
+    test02();
+    return 0;
+}
+```
+
