@@ -10,7 +10,7 @@ typedef struct Sqlist
 
 int init_list(sqlist *&L) //初始化
 {
-    // int a[10] = {1, 2, 3, 4, 5, 6,               7, 8, 9, 10};
+    // int a[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     int i;
     L = (sqlist *)malloc(sizeof(sqlist));
     // for (i = 0; i < 10; i++)
@@ -107,11 +107,30 @@ int insert_list(sqlist *L, int i, int e)
     return 1;
 }
 
-int main()
+int delete_list(sqlist *L, int i, int &e)
+{
+    int j;
+    if (i < 1 || e > L->length)
+    {
+        printf("%d is error\n", i);
+        return 0;
+    }
+    i--;
+    e = L->data[i];
+    for (j = i; j < L->length - 1; j++)
+    {
+        L->data[j] = L->data[j + 1];
+    }
+    printf("%d ele %d is deleted\n", i + 1, e);
+    L->length--;
+    return 1;
+}
+
+int main2()
 {
 
     sqlist *L;
-    int e,i;
+    int e, i;
     printf("\nwendu 2023\n");
     init_list(L);
 
@@ -126,13 +145,66 @@ int main()
 
     for (i = 0; i < 10; i++)
     {
-        insert_list(L,1,i+1);
-        show_list(L);
+        insert_list(L, 1, i + 1);
     }
-    
-
-
+    show_list(L);
+    delete_list(L, 3, e);
+    show_list(L);
     destory_list(L);
     // printf("length: %d \n", L->length);
+    return 0;
+}
+
+// 数组合并
+
+int union_array(int a[], int n, int b[], int m, int *&c)
+{
+    int i, j, k;
+    c = (int *)malloc((m + n) * sizeof(int));
+    i = 0;
+    j = 0;
+    k = 0;
+    while (i < n && j < m)
+    {
+        if (a[i] < b[j])
+        {
+            c[k] = a[i];
+            i++;
+            k++;
+        }
+        else
+        {
+            c[k] = b[j];
+            j++;
+            k++;
+        }
+    }
+    while (i < n)
+    {
+        c[k] = a[i];
+        i++;
+        k++;
+    }
+    while (j < m)
+    {
+        c[k] = b[j];
+        j++;
+        k++;
+    }
+    return 1;
+}
+
+int main()
+{
+    int a[5] = {2, 3, 8, 10, 12};
+    int b[10] = {1, 3, 7, 9, 16, 18, 19, 20, 22, 25};
+    int *c, i;
+    union_array(a, 5, b, 10,c);
+
+    for (i = 0; i < 15; i++)
+        printf("%d ", c[i]);
+
+    free(c);
+    printf("\n");
     return 0;
 }
