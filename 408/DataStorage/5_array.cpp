@@ -240,7 +240,7 @@ int find_mid_array3(int a[], int b[], int n)//分治法 O(logn)+O(1)
         m2 = (s2 + e2) / 2;
         if (a[m1] == b[m2])
             return a[m1];
-        else if (a[m1] == b[m2])
+        else if (a[m1] > b[m2])
         {
             if ((e1 - s1 + 1) % 2 == 0)
             {
