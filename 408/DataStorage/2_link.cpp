@@ -89,6 +89,23 @@ int length_link(linklist *L)
     return c;
 }
 
+
+int create_link_tail(linklist *&L,int a[],int n){
+    linklist *r,*s;int i;
+    L=(linklist *)malloc(sizeof(linklist));
+    L->next=NULL;r=L;
+    for(i=0;i<n;i++){
+        s=(linklist *)malloc(sizeof(linklist));
+        // s->next=NULL;//点明尾结点
+        s->data=a[i];
+        r->next=s;
+        r=s;
+    }
+    s->next=NULL;//点明尾结点
+    return 1;
+}
+
+
 //基本运算
 
 //初始化
@@ -134,6 +151,9 @@ int search_kth_link(linklist *L, int k)
     }
 }
 
+
+
+
 int main()
 {
     int a[5] = {2, 3, 8, 10, 12};
@@ -142,11 +162,14 @@ int main()
     // create_link_head(L, a, 5);
     // show_link(L);
 
-    create_link_head2(L,a,5);
-    show_link2(L);
+    // create_link_head2(L,a,5);
+    create_link_tail(L,a,n);
+    show_link(L);//带有头结点的展示
+
 
     // printf("length of link is %d\n",length_link(L));
-
+    // printf("length is %d\n",length_link(L));
+    // destory_link(L);
     // search_kth_link(L, 3);
     return 0;
 }
