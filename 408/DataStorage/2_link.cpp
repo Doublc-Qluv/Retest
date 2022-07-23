@@ -209,7 +209,7 @@ int insert_link(linklist *&L, int i, int e)
 {
     int j = 0;
     linklist *p = L, *q;
-    while (p != NULL && j < i-1)
+    while (p != NULL && j < i - 1)
     {
         j++;
         p = p->next;
@@ -223,15 +223,138 @@ int insert_link(linklist *&L, int i, int e)
     {
         q = (linklist *)malloc(sizeof(linklist));
         q->data = e;
-        q->next = p->next;
-        p->next = q;
+        q->next = p->next; // 指向后链
+        p->next = q;       // 链接前链
         return 1;
     }
 }
 
+int del_link(linklist *L, int i, int &e)
+{
+    int j = 0;
+    linklist *p = L, *q;
+    while (p != NULL && j < i - 1)
+    {
+        j++;
+        p = p->next;
+    }
+    if (p == NULL)
+    {
+        printf("%d illgeal\n", i);
+        return 0;
+    }
+    else
+    {
+        q = p->next; // 取后链
+        if (q == NULL)
+        {
+            printf("%d illgeal\n", i);
+            return 0;
+        }
+        e = q->data; //取值
+        printf("%d deleted\n", e);
+        p->next = q->next; // 目标的后链链接前点
+        free(q);           // 释放
+        return 1;
+    }
+}
+
+int del_all_key(linklist *L, int e)
+{
+    int j = 0;
+    linklist *p = L, *q;
+    while (p != NULL)
+    {
+        if (p->data == e)
+        {
+            q = p->next;
+            p->next == q->next;
+            free(q);
+        }
+        j++;
+        p = p->next;
+    }
+    return 1;
+}
+
+int del_link_a_value(linklist *L, int e)
+{
+    linklist *pre, *p;
+    pre = L;
+    p = L->next;
+    while (p != NULL)
+    {
+        if (p->data == e)
+        {
+            break;
+        }
+        pre = p;
+        p = p->next;
+    }
+    if (p != NULL)
+    {
+        pre->next = p->next;
+        free(p);
+        return 1;
+    }
+    else
+    {
+        printf("%d not exist\n", e);
+        return 0;
+    }
+}
+
+int del_link_all_value(linklist *L, int e)
+{
+    linklist *pre, *p;
+    pre = L;
+    p = pre;
+    while (p != NULL)
+    {
+        if (p->data == e)
+        {
+            pre->next = p->next;
+            free(p);
+            p = pre->next;
+        }
+        else
+        {
+            pre = p;
+            p = p->next;
+        }
+    }
+    return 1;
+}
+
+int set_link_value(linklist *L){
+    linklist *p,*q,*pt;
+    p=L;
+    while(p!=NULL){
+        q=p;
+        pt=p->next;
+        while(pt!=NULL){
+            if(pt->data==p->data){
+                q->next=pt->next;
+                free(pt);
+                pt=q->next;
+            }
+            else{
+                q=pt;
+                pt=q->next;
+            }
+        }
+        p=p->next;
+    }
+    return 1;
+}
+
+int merge_link(linklist *La,linklist *L){
+    
+}
+
 int main()
 {
-    int a[5] = {2, 3, 8, 10, 12};
+    int a[5] = {2, 3, 8, 10, 8};
     int n = 5;
     linklist *L;
     int e;
@@ -250,7 +373,11 @@ int main()
     // destory_link(L);
     // search_kth_link(L, 3);
 
-    insert_link(L, 1, 100);
+    // insert_link(L, 1, 100);
+    // del_link(L, 6, e);
+    // del_link_a_value(L, 8);
+    // del_link_all_value(L, 8);
+    set_link_value(L);
     show_link(L);
     return 0;
 }
