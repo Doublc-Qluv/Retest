@@ -326,35 +326,68 @@ int del_link_all_value(linklist *L, int e)
     return 1;
 }
 
-int set_link_value(linklist *L){
-    linklist *p,*q,*pt;
-    p=L;
-    while(p!=NULL){
-        q=p;
-        pt=p->next;
-        while(pt!=NULL){
-            if(pt->data==p->data){
-                q->next=pt->next;
+int set_link_value(linklist *L)
+{
+    linklist *p, *q, *pt;
+    p = L;
+    while (p != NULL)
+    {
+        q = p;
+        pt = p->next;
+        while (pt != NULL)
+        {
+            if (pt->data == p->data)
+            {
+                q->next = pt->next;
                 free(pt);
-                pt=q->next;
+                pt = q->next;
             }
-            else{
-                q=pt;
-                pt=q->next;
+            else
+            {
+                q = pt;
+                pt = q->next;
             }
         }
-        p=p->next;
+        p = p->next;
     }
     return 1;
 }
+int merge_link(linklist *&La, linklist *&Lb, linklist *&Lc)
+{
+    linklist  *pa, *pb, *pc, *ptr;
+    pa = La->next;
+    pb = Lb->next;
+    Lc=La;
+    Lc->next=NULL;
+    pc=Lc;
+    free(Lb);
+    while (pa != NULL && pb != NULL)
+    {
+        if (pa->data < pb->data)
+        {
+            pc->next = pa;
+            pc = pa;
+            pa = pa->next;
+        }
+        else
+        {
+            pc->next = pb;
+            pc = pb;
+            pb = pb->next;
+        }
+    }
+    if (pa != NULL)
+        pc->next = pa;
+    else
+        pc->next = pb;
 
-int merge_link(linklist *La,linklist *L){
-    
+    return 1;
 }
 
 int main()
 {
-    int a[5] = {2, 3, 8, 10, 8};
+    int a[5] = {2, 3, 8, 10, 12};
+    int b[5] = {11, 13, 14, 16, 18};
     int n = 5;
     linklist *L;
     int e;
@@ -363,7 +396,12 @@ int main()
 
     // create_link_head2(L,a,5);
     create_link_tail(L, a, n);
+    linklist *L2;
+    linklist *L3;
+    create_link_tail(L2, b, n);
+
     show_link(L); //带有头结点的展示
+    show_link(L2);
     int getnum = 5;
     // get_elem_link(L, getnum, e);
     // printf("length of link is %d\n",length_link(L));
@@ -377,7 +415,8 @@ int main()
     // del_link(L, 6, e);
     // del_link_a_value(L, 8);
     // del_link_all_value(L, 8);
-    set_link_value(L);
-    show_link(L);
+    // set_link_value(L);
+    merge_link(L, L2,L3);
+    show_link(L3);
     return 0;
 }
