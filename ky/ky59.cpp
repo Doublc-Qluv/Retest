@@ -12,15 +12,28 @@ John就可以得到这些物品。现在的问题是，John有多少种不同的
 #include <iostream>
 
 using namespace std;
-
-int main(){
-    if("./ky59.data"!=NULL) {freopen("./ky59.data","r",stdin);}
-    int n;
-    cin >> n;
-    int a[n]={0};
-    for (int i=0;i<n;i++){
-        cin >> a[i];
+int sum(int a[],int n, int s){
+    if(s==0)return 1;
+    if(n == 1){
+        if(a[0]!=s)return 0;
+        else return 1;
     }
-    printf("%d",a[0]);
-    return 0 ;
+    return(sum(a,n-1,s)+sum(a,n-1,s-a[n-1]));
 }
+
+
+int main() {
+    int a[20];
+    int n;
+    if ("./ky59.data" != NULL)
+    {
+        freopen("./ky59.data", "r", stdin);
+    }
+    cin>>n;
+    for(int i=0;i<n;i++){
+        cin>>a[i];
+    }
+    cout<<sum(a,n,40);
+    return 0;
+}
+// 64 位输出请用 printf("%lld")
