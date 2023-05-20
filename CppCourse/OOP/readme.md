@@ -1407,3 +1407,232 @@ int main()
 }
 
 ```
+
+
+
+### 4.2.6 初始化列表
+
+作用: C++提供了初始化列表的语法,来初始化属性
+
+语法:`构造函数():属性1(值1),属性2()……{}`
+
+[示例:](./140207.cpp)
+```c++
+class Person
+{
+private:
+    int m_A,m_B,m_C;
+public:
+    Person(int a, int b, int c);
+    void PrintPerson(){
+        cout<<"mA:"<<m_A<<endl;
+        cout<<"mB:"<<m_B<<endl;
+        cout<<"mC:"<<m_C<<endl;
+    }
+};
+// //传统方式初始化
+// Person::Person(int a, int b, int c)
+// {
+//     m_A = a;
+//     m_B = b;
+//     m_C = c;
+// }
+//初始化列表方式初始化
+Person::Person(int a, int b, int c):m_A(a),m_B(b),m_C(c){}
+```
+
+### 4.2.7 类对象作为类成员
+
+C++ 类中的成员可以是另一个类的对象，我们称该成员是对象成员
+
+例如：
+```c++
+class A{}
+class B{
+    A a;
+}
+```
+B中有对象A作为成员，A为对象成员
+
+当创建对象B时，A与B的构造析构顺序：
+- 构造：先调用对象成员，再调用本类
+- 析构：先调用本类，再调用对象成员
+
+[示例](./140208.cpp)
+```c++
+#include <iostream>
+using namespace std;
+
+class Phone
+{
+private:
+    /* data */
+public:
+    string m_PhoneName;
+    Phone(string name);
+    ~Phone();
+};
+
+Phone::Phone(string name)
+{
+    m_PhoneName=name;
+    cout <<"Phone 构造"<<endl;
+}
+
+Phone ::~Phone()
+{
+    cout <<"Phone 析构"<<endl;
+}
+
+class Person
+{
+private:
+    /* data */
+public:
+    string m_Name;
+    Phone m_Phone;
+    Person(string name, string pName):m_Name(name),m_Phone(pName){
+        cout <<"Person 构造"<<endl;
+    }
+    ~Person(){
+        cout <<"Person 析构"<<endl;
+    }
+    void playGame(){
+        cout <<m_Name<<" 使用 "<< m_Phone.m_PhoneName<<" 牌 手机。"<<endl;
+    }
+};
+void test01(){
+    Person p("张三","Apple");
+    p.playGame();    
+}
+
+int main(){
+    test01();
+    return 0;
+}
+
+```
+
+### 4.2.8 静态成员
+
+静态成员就是在成员变量和成员函数前加上关键字static,称为静态成员
+
+静态成员分为：
+- 静态成员变量
+  - 所有对象成员共享同一份数据
+  - 在编译阶段分配内存
+  - 类内声明，类外初始化
+- 静态成员函数
+  - 所有对象共享同一个函数
+  - 静态成员函数只能访问成员变量
+
+[示例](./140209.cpp)
+```c++
+class Person
+{
+	
+public:
+
+	static int m_A; //静态成员变量
+
+	//静态成员变量特点：
+	//1 在编译阶段分配内存
+	//2 类内声明，类外初始化
+	//3 所有对象共享同一份数据
+
+private:
+	static int m_B; //静态成员变量也是有访问权限的
+};
+int Person::m_A = 10;
+int Person::m_B = 10;
+
+void test01()
+{
+	//静态成员变量两种访问方式
+
+	//1、通过对象
+	Person p1;
+	p1.m_A = 100;
+	cout << "p1.m_A = " << p1.m_A << endl;
+
+	Person p2;
+	p2.m_A = 200;
+	cout << "p1.m_A = " << p1.m_A << endl; //共享同一份数据
+	cout << "p2.m_A = " << p2.m_A << endl;
+
+	//2、通过类名
+	cout << "m_A = " << Person::m_A << endl;
+
+
+	//cout << "m_B = " << Person::m_B << endl; //私有权限访问不到
+}
+
+int main() {
+
+	test01();
+
+	return 0;
+}
+```
+
+[示例2](./140210.cpp)
+
+```c++
+class Person
+{
+
+public:
+
+	//静态成员函数特点：
+	//1 程序共享一个函数
+	//2 静态成员函数只能访问静态成员变量
+	
+	static void func()
+	{
+		cout << "func调用" << endl;
+		m_A = 100;
+		//m_B = 100; //错误，不可以访问非静态成员变量
+	}
+
+	static int m_A; //静态成员变量
+	int m_B; // 
+private:
+
+	//静态成员函数也是有访问权限的
+	static void func2()
+	{
+		cout << "func2调用" << endl;
+	}
+};
+int Person::m_A = 10;
+
+
+void test01()
+{
+	//静态成员变量两种访问方式
+
+	//1、通过对象
+	Person p1;
+	p1.func();
+
+	//2、通过类名
+	Person::func();
+
+
+	//Person::func2(); //私有权限访问不到
+}
+
+int main() {
+
+	test01();
+
+	return 0;
+}
+```
+
+## 4.3 C++对象模型和this指针
+### 4.3.1 成员变量和成员函数分开存储
+在C++中，类内的成员变量和成员函数分开存储
+
+只有非静态成员变量才属于类的对象上
+
